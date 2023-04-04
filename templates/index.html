@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block content %}
+<div>
+    {% for item in posts %}
+    <div style="margin-top: 3%;">
+        <div class="card {% if item.done %}alert-success {% endif %}" style="width: 70%;">
+            <div class="card-header">
+                {{item.user.name}}, {{item.created_date.strftime('%Y-%m-%d %H:%M')}}
+                {% if item.done %} <h5 class="card-title" style="margin-top: 8px;">Вопрос закрыт</h5> {% endif %}
+                {% if current_user.is_authenticated and current_user != item.user and not item.done %}
+                <div class="btn-group" role="group" aria-label="Basic outlined example" style="margin-left: 16px;">
+                    <form method="post" action="/vote/{{item.id}}">
+                        <button type="submit" name="upvote" value="upvote" class="btn btn-outline-primary"
+                                style="margin-right: 20px;">Upvote
+                            <span style="color: white;"
+                                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+    +1
+  </span>
+                        </button>
+                        <button type="submit" name="downvote" value="downvote" class="btn btn-outline-primary">Downvote
+                            <span style="color: white;"
+                                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+    -1
+  </span>
+                        </button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-horizontal">
+                    {% for tag in item.tags %}
+                    <li class="card text-white border-info mb-3 text-primary"
+                        style="margin-right: 6px; padding: 6px;">
+                        {{tag.name}}
+                    </li>
+                    {% endfor %}
+                </ul>
+                <h5 class="card-title">{{item.title}}</h5>
+                <p class="card-text">{{item.content}}</p>
+                {% if item.thread_messages %}
+                <br>
+                {% endif %}
+                <ul class="list-group" style="margin-left: 15px;">
+
+                    {% for message in item.thread_messages %}
+                    <li class="list-group-item">
+                        {{message.content}} - {{message.user.name}}, {{message.created_date.strftime('%Y-%m-%d %H:%M')}}
+                    </li>
+                    {% endfor %}
+                </ul>
+                <br>
+
+                <div>
+                    {% if current_user.is_authenticated and current_user == item.user %}
+                    <a href="/post_delete/{{ item.id }}" class="btn btn-danger">
+                        Удалить
+                    </a>
+                    {% if not item.done %}
+                    <a href="/posts/{{ item.id }}" class="btn btn-primary">
+                        Изменить
+                    </a>
+                    <a href="/complete/{{ item.id }}" class="btn btn-success">
+                        Закрыть вопрос
+                    </a>
+                    {% endif %}
+                    {% endif %}
+                    {% if current_user.is_authenticated %}
+                    {% if not item.done %}
+                    <a href="/post/{{ item.id }}/add_message" class="btn btn-secondary">
+                        Добавить комментарий
+                    </a>
+                    {% endif %}
+                    {% endif %}
+                </div>
+                {% if current_user.is_authenticated %}
+                <div>
+
+                </div>
+
+                {% endif %}
+            </div>
+        </div>
+
+
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
