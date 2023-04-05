@@ -17,6 +17,10 @@
         <a class="btn btn-danger" href="/"> Очистить фильтр: {{tag.name}}
         </a>
         {% endif %}
+        {% if user %}
+        <a class="btn btn-danger" href="/"> Очистить фильтр: {{user.name}}
+        </a>
+        {% endif %}
         {% if current_user.is_authenticated %}
         <a href="posts" class="btn btn-primary btn-lg">Новый пост</a>
         {% endif %}

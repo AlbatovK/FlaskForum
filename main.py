@@ -60,6 +60,15 @@ def logout():
     return redirect("/")
 
 
+@app.route('/user/<int:user_id>')
+@login_required
+def user_page(user_id):
+    session = db_session.create_session()
+    user = session.query(User).filter(User.id == user_id).first()
+    rating = sum([x.rating for x in user.posts])
+    return render_template('user.html', user=user, rating=rating, posts=user.posts, title=user.name)
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()

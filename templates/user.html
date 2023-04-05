@@ -1,11 +1,31 @@
 {% extends "base.html" %}
 {% block content %}
 <div>
+
+    <div class="card mb-3" style="max-width: 60%; margin-top:16px;">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img align="center" src="{{url_for('static', filename='img/profile.png')}}"
+                     class="img-fluid rounded-start" alt="...">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">{{ user.name }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ user.email }}</h6>
+                    <p class="card-text">{{ user.about }} </p>
+                    <p class="card-text">Постов: {{ user.posts|length }}</p>
+                    <p class="card-text">Рейтинг: {{ rating }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     {% for item in posts %}
     <div style="margin-top: 3%;">
         <div class="card {% if item.done %}alert-success {% endif %}" style="width: 70%;">
             <div class="card-header">
-                <a href="/user/{{ item.user.id }}">{{item.user.name}}</a>, {{item.created_date.strftime('%Y-%m-%d %H:%M')}}
+                {{item.created_date.strftime('%Y-%m-%d %H:%M')}}
                 {% if item.done %} <h5 class="card-title" style="margin-top: 8px;">Вопрос закрыт</h5> {% endif %}
                 {% if current_user.is_authenticated and current_user != item.user and not item.done %}
                 <div class="btn-group" role="group" aria-label="Basic outlined example" style="margin-left: 16px;">
@@ -31,8 +51,7 @@
                 <ul class="list-group list-group-horizontal">
                     {% for tag in item.tags %}
                     <li class="card text-white border-info mb-3 text-primary"
-                        style="margin-right: 6px; padding: 6px;">
-                        <a href="/{{ tag.id }}">{{tag.name}}</a>
+                        style="margin-right: 6px; padding: 6px;">{{tag.name}}
                     </li>
                     {% endfor %}
                 </ul>
