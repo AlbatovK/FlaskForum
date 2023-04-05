@@ -32,7 +32,7 @@
                     {% for tag in item.tags %}
                     <li class="card text-white border-info mb-3 text-primary"
                         style="margin-right: 6px; padding: 6px;">
-                        {{tag.name}}
+                        <a href="/{{ tag.id }}">{{tag.name}}</a>
                     </li>
                     {% endfor %}
                 </ul>

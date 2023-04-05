@@ -158,7 +158,16 @@ def set_completed(post_id: int):
 def index():
     session = db_session.create_session()
     posts = session.query(Post).order_by(Post.done, desc(Post.rating), desc(Post.created_date))
-    return render_template("index.html", posts=posts)
+    return render_template("index.html", posts=posts, tag=None)
+
+
+@app.route("/<int:tag_id>")
+def index_with_tag(tag_id):
+    session = db_session.create_session()
+    tag = session.query(Tag).filter(Tag.id == tag_id).first()
+    posts = [x for x in session.query(Post).order_by(Post.done, desc(Post.rating), desc(Post.created_date)) if
+             tag in x.tags]
+    return render_template("index.html", posts=posts, tag=tag)
 
 
 @app.route('/posts/<int:post_id>', methods=['GET', 'POST'])
