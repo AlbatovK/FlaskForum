@@ -61,7 +61,6 @@ def logout():
 
 
 @app.route('/user/<int:user_id>')
-@login_required
 def user_page(user_id):
     session = db_session.create_session()
     user = session.query(User).filter(User.id == user_id).first()
