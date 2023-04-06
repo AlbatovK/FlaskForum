@@ -1,10 +1,15 @@
 import os
 
+from apispec import APISpec
+from apispec.ext.marshmallow import MarshmallowPlugin
 from flask import Flask, redirect, request, abort
 from flask import render_template
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_apispec import FlaskApiSpec
+from flask_login import login_user, login_required, logout_user, current_user, LoginManager
+from flask_restful import Api
 from sqlalchemy import desc
 
+from api import user_resource
 from data import db_session
 from data.post import Post
 from data.tag import Tag
@@ -17,6 +22,37 @@ from forms.post_edit import EditPostForm
 from forms.register import RegisterForm
 
 app = Flask(__name__)
+api = Api(app)
+
+api.add_resource(user_resource.UserResource, '/api/v2/user/<int:user_id>')
+api.add_resource(user_resource.UserListResource, '/api/v2/users')
+
+spec = APISpec(
+    title='FlaskForum',
+    version='v2',
+    plugins=[MarshmallowPlugin()],
+    openapi_version='2.0.0',
+    info={
+        "description": "📝 Api endpoints for FlaskForum Web App",
+        "version": "2.0.0",
+        "title": "FlaskForum REST API",
+        "contact": {
+            "email": "albatovkonstantin@gmail.com"
+        },
+    }
+)
+
+app.config.update(
+    {
+        'APISPEC_SWAGGER_UI_URL': '/swagger-ui/',
+        'APISPEC_SPEC': spec
+    }
+)
+
+docs = FlaskApiSpec(app)
+docs.register(user_resource.UserResource)
+docs.register(user_resource.UserListResource)
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 app.config['SECRET_KEY'] = 'secret_key'
