@@ -28,6 +28,8 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
 
     thread_messages = orm.relationship("ThreadMessage", back_populates='user')
 
+    avatar = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)
 

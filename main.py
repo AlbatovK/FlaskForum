@@ -2,12 +2,13 @@ import os
 
 from apispec import APISpec
 from apispec.ext.marshmallow import MarshmallowPlugin
-from flask import Flask, redirect, request, abort
+from flask import Flask, redirect, request, abort, url_for
 from flask import render_template
 from flask_apispec import FlaskApiSpec
 from flask_login import login_user, login_required, logout_user, current_user, LoginManager
 from flask_restful import Api
 from sqlalchemy import desc
+from werkzeug.utils import secure_filename
 
 from api import user_resource
 from data import db_session
@@ -15,6 +16,7 @@ from data.post import Post
 from data.tag import Tag
 from data.thread_message import ThreadMessage
 from data.user import User
+from forms.image_load_form import ImageLoadForm
 from forms.login import LoginForm
 from forms.message import MessageForm
 from forms.post_add import AddPostForm
@@ -101,7 +103,28 @@ def user_page(user_id):
     session = db_session.create_session()
     user = session.query(User).filter(User.id == user_id).first()
     rating = sum([x.rating for x in user.posts])
-    return render_template('user.html', user=user, rating=rating, posts=user.posts, title=user.name)
+    avatar_url = url_for('static', filename=f'img/{user.avatar if user.avatar else "profile.png"}')
+    return render_template('user.html', user=user,
+                           rating=rating, posts=user.posts, title=user.name, avatar_url=avatar_url)
+
+
+@app.route('/load_avatar/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def load_avatar(user_id):
+    form = ImageLoadForm()
+    if form.validate_on_submit():
+        if form.file_name.data:
+            file = request.files[form.file_name.name]
+            file_name = secure_filename(file.filename)
+            file.save('static/img')
+
+            session = db_session.create_session()
+            user = session.query(User).filter(User.id == user_id).first()
+            user.avatar = file_name
+            session.commit()
+        return redirect(f'/user/{user_id}')
+
+    return render_template("file_upload.html", form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])

@@ -4,9 +4,15 @@
 
     <div class="card mb-3" style="max-width: 60%; margin-top:16px;">
         <div class="row g-0">
-            <div class="col-md-4">
-                <img align="center" src="{{url_for('static', filename='img/profile.png')}}"
+            <div class="col-md-4" align="center">
+                <img align="center" src="{{avatar_url}}"
                      class="img-fluid rounded-start" alt="...">
+                {% if not user.avatar and user.id == current_user.id %}
+                <a href="/load_avatar/{{ user.id }}" class="btn btn-primary"
+                   style="margin-top: 10px; margin-bottom: 10px;">
+                    Загрузить аватар
+                </a>
+                {% endif %}
             </div>
             <div class="col-md-8">
                 <div class="card-body">
