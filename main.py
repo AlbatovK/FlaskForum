@@ -116,7 +116,7 @@ def load_avatar(user_id):
         if form.file_name.data:
             file = request.files[form.file_name.name]
             file_name = secure_filename(file.filename)
-            file.save(f'static/img/{file.filename}')
+            file.save(f'static/img/{file_name}')
 
             session = db_session.create_session()
             user = session.query(User).filter(User.id == user_id).first()
