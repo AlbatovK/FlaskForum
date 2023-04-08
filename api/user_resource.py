@@ -34,7 +34,7 @@ class UserNotFoundErrorSchema(Schema):
     message = fields.String(default='error_message')
 
 
-class ResponseSuccessStatusSchema(Schema):
+class ResponseStatusSchema(Schema):
     success = fields.String(default='success_status')
 
 
@@ -61,12 +61,8 @@ class UserResource(MethodResource, Resource):
         )
 
     @doc(description='Удалить пользователя с данным id')
-    @marshal_with(
-        ResponseSuccessStatusSchema, code='200'
-    )
-    @marshal_with(
-        UserNotFoundErrorSchema, code='404'
-    )
+    @marshal_with(ResponseStatusSchema, code='200')
+    @marshal_with(UserNotFoundErrorSchema, code='404')
     def delete(self, user_id):
         abort_if_user_not_found(user_id)
         session = db_session.create_session()
@@ -96,23 +92,26 @@ class UserListResource(MethodResource, Resource):
 
     @doc(description='Создать пользователя')
     @use_kwargs(UserRequestSchema, location='json')
-    @marshal_with(ResponseSuccessStatusSchema)
-    def post(
-            self,
-            about,
-            name,
-            password,
-            email
-    ):
+    @marshal_with(ResponseStatusSchema)
+    def post(self, about, name, password, email):
         args = parser.parse_args()
-        session = db_session.create_session()
+
+        password = args['password']
+        if password.strip() == '' or not password:
+            return jsonify(
+                {
+                    'success': 'Failed - password is invalid'
+                }
+            )
+
         user = User(
             name=args['name'],
             about=args['about'],
             email=args['email'],
         )
 
-        user.set_password(args['password'])
+        user.set_password(password)
+        session = db_session.create_session()
         session.add(user)
         session.commit()
         return jsonify(

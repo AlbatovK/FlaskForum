@@ -10,7 +10,7 @@ from flask_restful import Api
 from sqlalchemy import desc
 from werkzeug.utils import secure_filename
 
-from api import user_resource
+from api import user_resource, post_resource
 from data import db_session
 from data.post import Post
 from data.tag import Tag
@@ -28,6 +28,7 @@ api = Api(app)
 
 api.add_resource(user_resource.UserResource, '/api/v2/user/<int:user_id>')
 api.add_resource(user_resource.UserListResource, '/api/v2/users')
+api.add_resource(post_resource.PostListResource, '/api/v2/posts')
 
 spec = APISpec(
     title='FlaskForum',
@@ -54,6 +55,7 @@ app.config.update(
 docs = FlaskApiSpec(app)
 docs.register(user_resource.UserResource)
 docs.register(user_resource.UserListResource)
+docs.register(post_resource.PostListResource)
 
 login_manager = LoginManager()
 login_manager.init_app(app)

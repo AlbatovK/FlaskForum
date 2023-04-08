@@ -1,3 +1,4 @@
+import os
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -20,7 +21,7 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 import sys
 
-sys.path.insert(0, 'Путь к папке вашего проекта')
+sys.path.insert(0, os.getcwd()[:-8])
 from data.db_session import SqlAlchemyBase
 import data.__all_models
 

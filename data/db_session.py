@@ -39,16 +39,31 @@ def global_init(db_file, app):
                 __all_models.tag.Tag(name='Python'),
                 __all_models.tag.Tag(name='Machine Learning'),
                 __all_models.tag.Tag(name='Android Developing'),
-                __all_models.tag.Tag(name='Backend')
+                __all_models.tag.Tag(name='Web Backend'),
+                __all_models.tag.Tag(name='Databases'),
+                __all_models.tag.Tag(name='Algorithms')
             ]
 
-            user = __all_models.user.User(name='Admin', about='I like cats', email='idk@idk.com')
+            user = __all_models.user.User(
+                name='Admin',
+                about='I like cats',
+                email='idk@idk.com'
+            )
+
             user.set_password('test')
 
-            post = __all_models.post.Post(title="Welcome! This is a test post.", content="Hope that finally works...",
-                                          user=user, tags=tags[:2])
+            post = __all_models.post.Post(
+                title="Welcome! This is a test post.",
+                content="Hope that finally works...",
+                user=user,
+                tags=tags[1:3]
+            )
 
-            thread_message = __all_models.thread_message.ThreadMessage(content='Try Reddit', user=user, post=post)
+            thread_message = __all_models.thread_message.ThreadMessage(
+                content='Try Reddit',
+                user=user,
+                post=post
+            )
 
             post.thread_messages.append(thread_message)
 
