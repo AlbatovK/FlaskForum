@@ -18,8 +18,10 @@
   * `Alembic` - поддержка автоматических миграция
   * `SqlAlchemyUtils` - поддержка препопуляции БД
 * `Boostrap` - свободный набор готовых компонентов для упрощения верстки страниц
-* `Railway` - бесплатный [хостинг]((https://flaskforum-production.up.railway.app) с автодеплоем
+* `Railway` - бесплатный [хостинг](https://flaskforum-production.up.railway.app) с автодеплоем
 
 # Схема базы данных
 <img src="https://downloader.disk.yandex.ru/preview/9bf3492f2b37754565de078ca47b54519506e79c6cf8e52a9dc38d1f10ef9e5b/64358941/U48uOyQfoBPc0SBC8S0C5Qy3-_874EKDgTocBeQgQtNbzYuuVHylEFXN9h1mduFtb7YxG3sPWsFaYlLAuVeaUQ%3D%3D?uid=0&filename=FlaskForum.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&tknv=v2&size=2048x2048">
+
+Всего в проекте более 540 строк кода, 5 таблиц БД, 6 форм, 9 HTML-шаблонов. Используются статический контент, присутствует загрузка файлов (картинок) в серверное хранилище для дальнейшего использования. API состоит из 5 endpoint-ов GET, POST, DELETE методов.
 
